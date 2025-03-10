@@ -30,7 +30,7 @@ void InvertedIndex::IndexDocument(size_t doc_id) {
     }
 
     for (const auto& [word, count] : word_count) {
-        freq_dictionary[word].push_back({doc_id, count});
+        freq_dictionary[word].emplace_back(doc_id, count);
         std::cout << "Indexed word: " << word << " for DocID: " << doc_id << " with count: " << count << std::endl;
     }
 }

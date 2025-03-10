@@ -3,19 +3,15 @@
 #include <string>
 #include "index.h"
 #include "converter_json.h"
+
 int main() {
     try {
-        ConverterJSON converter;
-
-        std::vector<std::string> files = converter.GetTextDocuments();
-
+        std::vector<std::string> files = ConverterJSON::GetTextDocuments();
         InvertedIndex index;
-
         index.UpdateDocumentBase(files);
 
-        std::vector<std::string> queries = converter.GetRequests();
-
-        int max_responses = converter.GetResponsesLimit();
+        std::vector<std::string> queries = ConverterJSON::GetRequests();
+        int max_responses = ConverterJSON::GetResponsesLimit();
 
         std::vector<std::vector<std::pair<int, float>>> answers;
 
@@ -24,7 +20,6 @@ int main() {
 
             for (size_t doc_id = 0; doc_id < files.size(); ++doc_id) {
                 float relevance = CalculateRelevance(index.GetIndex(), {query}, doc_id);
-
                 relevance_scores.push_back({static_cast<int>(doc_id + 1), relevance});
             }
 
@@ -39,7 +34,7 @@ int main() {
             answers.push_back(relevance_scores);
         }
 
-        converter.putAnswers(answers);
+        ConverterJSON::putAnswers(answers);
 
         std::cout << "Processing completed and answers saved." << std::endl;
 
@@ -49,5 +44,6 @@ int main() {
 
     return 0;
 }
+
 
 
