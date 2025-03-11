@@ -13,6 +13,14 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(nlohmann_json)
 
+FetchContent_Declare(
+        gtest
+        GIT_REPOSITORY https://github.com/google/googletest.git
+        GIT_TAG release-1.11.0
+)
+
+FetchContent_MakeAvailable(gtest)
+
 include_directories(${PROJECT_SOURCE_DIR}/include)
 
 add_executable(hate
@@ -23,6 +31,24 @@ add_executable(hate
 )
 
 target_link_libraries(hate PRIVATE nlohmann_json::nlohmann_json)
+
+enable_testing()
+
+add_executable(test_hate
+        tests/test_inverted_index.cpp
+        src/index.cpp
+        src/inverted_index.cpp
+)
+
+target_link_libraries(test_hate PRIVATE gtest gtest_main nlohmann_json::nlohmann_json)
+
+add_test(NAME test_hate COMMAND test_hate)
+
+
+
+
+
+
 
 
 
