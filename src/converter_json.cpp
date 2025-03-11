@@ -42,7 +42,7 @@ std::vector<std::string> ConverterJSON::GetTextDocuments() {
         if (file_stream.is_open()) {
             std::stringstream buffer;
             buffer << file_stream.rdbuf();
-            files.push_back(buffer.str());
+            files.emplace_back(buffer.str());
         } else {
             throw std::runtime_error("Failed to open file: " + file_path.string());
         }
@@ -72,7 +72,7 @@ std::vector<std::string> ConverterJSON::GetRequests() {
 
     std::vector<std::string> requests;
     for (const auto& request : requests_json["requests"]) {
-        requests.push_back(request.get<std::string>());
+        requests.emplace_back(request.get<std::string>());
     }
     return requests;
 }

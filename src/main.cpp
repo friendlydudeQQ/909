@@ -20,7 +20,7 @@ int main() {
 
             for (size_t doc_id = 0; doc_id < files.size(); ++doc_id) {
                 float relevance = CalculateRelevance(index.GetIndex(), {query}, doc_id);
-                relevance_scores.push_back({static_cast<int>(doc_id + 1), relevance});
+                relevance_scores.emplace_back(static_cast<int>(doc_id + 1), relevance);
             }
 
             std::sort(relevance_scores.begin(), relevance_scores.end(), [](const auto& a, const auto& b) {
@@ -31,7 +31,7 @@ int main() {
                 relevance_scores.resize(max_responses);
             }
 
-            answers.push_back(relevance_scores);
+            answers.emplace_back(relevance_scores);
         }
 
         ConverterJSON::putAnswers(answers);
