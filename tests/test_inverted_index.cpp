@@ -173,7 +173,7 @@ TEST(TestCaseSearchServer, TestEmptyQuery) {
         if (index.find(query) != index.end()) {
             std::vector<SearchResult> search_results;
             for (const auto& entry : index.at(query)) {
-                search_results.push_back({static_cast<int>(entry.doc_id), static_cast<float>(entry.count)});
+                search_results.emplace_back(static_cast<int>(entry.doc_id), static_cast<float>(entry.count));
             }
             result.emplace_back(search_results);
         } else {
