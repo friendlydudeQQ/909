@@ -28,6 +28,7 @@ add_executable(hate
         src/converter_json.cpp
         src/index.cpp
         src/inverted_index.cpp
+        src/search_server.cpp
 )
 
 target_link_libraries(hate PRIVATE nlohmann_json::nlohmann_json)
@@ -38,11 +39,15 @@ add_executable(test_hate
         tests/test_inverted_index.cpp
         src/index.cpp
         src/inverted_index.cpp
+        src/search_server.cpp
+        tests/test_index.cpp
 )
 
 target_link_libraries(test_hate PRIVATE gtest gtest_main nlohmann_json::nlohmann_json)
 
 add_test(NAME test_hate COMMAND test_hate)
+
+
 
 
 

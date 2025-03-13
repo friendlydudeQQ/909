@@ -36,14 +36,16 @@ TEST(TestCaseInvertedIndex, TestBasic2) {
             "milk milk milk milk milk water water water water water",
             "americano cappuccino"
     };
-    const std::vector<std::string> requests = {"milk", "water", "cappuchino"};
+    const std::vector<std::string> requests = {"milk", "water", "cappuccino"};
     const std::vector<std::vector<Entry>> expected = {
             { {0, 4}, {1, 1}, {2, 5} },
-            { {0, 2}, {1, 2}, {2, 5} },
+            { {0, 3}, {1, 2}, {2, 5} },
             { {3, 1} }
     };
     TestInvertedIndexFunctionality(docs, requests, expected);
 }
+
+
 
 TEST(TestCaseInvertedIndex, TestInvertedIndexMissingWord) {
     const std::vector<std::string> docs = {
@@ -55,7 +57,21 @@ TEST(TestCaseInvertedIndex, TestInvertedIndexMissingWord) {
             { },
             { {1, 1} }
     };
-    TestInvertedIndexFunctionality(docs, requests, expected);
+
+    InvertedIndex idx;
+    idx.UpdateDocumentBase(docs);
+
+    std::vector<std::vector<Entry>> result;
+    for (const auto& request : requests) {
+        auto it = idx.GetIndex().find(request);
+        if (it != idx.GetIndex().end()) {
+            result.push_back(it->second);
+        } else {
+            result.push_back({});
+        }
+    }
+
+    ASSERT_EQ(result, expected);
 }
 
 TEST(TestCaseCalculateRelevance, TestRelevance) {
@@ -69,6 +85,7 @@ TEST(TestCaseCalculateRelevance, TestRelevance) {
     float relevance = CalculateRelevance(idx.GetIndex(), query_words, 0);
     ASSERT_FLOAT_EQ(relevance, 2);
 }
+
 
 
 

@@ -3,6 +3,7 @@
 #include <thread>
 #include <iostream>
 #include <map>
+#include <mutex>
 
 InvertedIndex::InvertedIndex() = default;
 
@@ -12,11 +13,13 @@ void InvertedIndex::UpdateDocumentBase(std::vector<std::string> input_docs) {
 
     std::vector<std::thread> threads;
     for (size_t i = 0; i < docs.size(); ++i) {
-        threads.emplace_back(std::thread(&InvertedIndex::IndexDocument, this, i));
+        threads.emplace_back(&InvertedIndex::IndexDocument, this, i);
     }
 
     for (auto& th : threads) {
-        th.join();
+        if (th.joinable()) {
+            th.join();
+        }
     }
 }
 
@@ -29,12 +32,13 @@ void InvertedIndex::IndexDocument(size_t doc_id) {
         word_count[word]++;
     }
 
+    static std::mutex dict_mutex;
     for (const auto& [word, count] : word_count) {
+        std::lock_guard<std::mutex> lock(dict_mutex);
         freq_dictionary[word].emplace_back(doc_id, count);
         std::cout << "Indexed word: " << word << " for DocID: " << doc_id << " with count: " << count << std::endl;
     }
 }
-
 
 const std::map<std::string, std::vector<Entry>>& InvertedIndex::GetIndex() const {
     return freq_dictionary;

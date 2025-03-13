@@ -2,28 +2,43 @@
 #include "converter_json.h"
 #include <vector>
 #include <algorithm>
-#include <iostream>
 #include <stdexcept>
 
-float CalculateRelevance(const std::map<std::string, std::vector<Entry>>& index, const std::vector<std::string>& query_words, size_t doc_id) {
-    float relevance_score = 0.0;
+float CalculateRelevance(const std::map<std::string, std::vector<Entry>>& index,
+                         const std::vector<std::string>& query_words,
+                         size_t doc_id) {
+    float totalRelevance = 0.0f;
+    size_t validWords = 0;
 
     for (const auto& word : query_words) {
-        auto it = index.find(word);
-        if (it != index.end()) {
-            for (const auto& entry : it->second) {
-                if (entry.doc_id == doc_id) {
-                    relevance_score += entry.count;
-                    break;
-                }
+        auto wordIt = index.find(word);
+        if (wordIt == index.end()) continue;
+
+        size_t maxCount = 0;
+        for (const auto& entry : wordIt->second) {
+            if (entry.count > maxCount) maxCount = entry.count;
+        }
+        if (maxCount == 0) continue;
+
+        size_t docCount = 0;
+        for (const auto& entry : wordIt->second) {
+            if (entry.doc_id == doc_id) {
+                docCount = entry.count;
+                break;
             }
         }
+
+        totalRelevance += static_cast<float>(docCount) / maxCount;
+        validWords++;
     }
 
-    std::cout << "DocID: " << doc_id << " Relevance: " << relevance_score << std::endl;
-
-    return relevance_score;
+    if (validWords == 0) return 0.0f;
+    return totalRelevance / validWords;
 }
+
+
+
+
 
 
 
