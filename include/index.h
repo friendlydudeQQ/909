@@ -1,6 +1,6 @@
 #ifndef INDEX_H
 #define INDEX_H
-
+#include <mutex>
 #include <map>
 #include <vector>
 #include <string>
@@ -23,6 +23,7 @@ public:
 private:
     std::vector<std::string> docs;
     std::map<std::string, std::vector<Entry>> freq_dictionary;
+    std::mutex dict_mutex;
 
     void IndexDocument(size_t doc_id);
 };
