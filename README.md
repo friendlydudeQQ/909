@@ -27,9 +27,9 @@ project/
 ├── src/
 │   ├── main.cpp        # Основная логика
 │   ├── converter_json.cpp # Работа с JSON
-│   ├── index.cpp
-│   ├── inverted_index.cpp
-│   └── search_server.cpp
+│   ├── index.cpp # Формула релевантности
+│   ├── inverted_index.cpp # Инвертированный индекс
+│   └── search_server.cpp # Логика движка
 ├── include/
 │    ├── index.h
 │    ├── converter_json.h
@@ -39,7 +39,7 @@ project/
 │    ├── file1.txt
 │    ├── file2.txt
 │    └── file3.txt
-└── tests/
+└── tests/ # Тесты
      ├── test_index.cpp
      └── test_inverted_index.cpp    
 ````
